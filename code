@@ -1,0 +1,17 @@
+import requests
+import telebot
+token='6141216241:AAHdcXWDcClCdr-bN_8rCq_diLeXoe-v9SU'
+bot=telebot.TeleBot(token)
+@bot.message_handler(commands=['info'])
+def info(message):
+    r=requests.get("https://api.monobank.ua/personal/client-info", headers={"X-Token":"uLCLwVtb69lZJu0kxw1f0ezZfRnB-4pO4QnI6eomU8nE"})
+    result = r.json()
+    result_2 = r.content.decode("UTF-8")
+    clientid = result["clientId"]
+    name = result['name']
+    accounts = result["accounts"]
+    balance_help = result_2.find("balance")+9
+    balance_help2 = result_2[balance_help:]
+    balance = balance_help2.split(",")[0]
+    bot.send_message(message.chat.id, "МоноБанк ИнфоБот\nКлиент: "+name+"\nБаланс: "+balance+" UAH")
+bot.infinity_polling()
